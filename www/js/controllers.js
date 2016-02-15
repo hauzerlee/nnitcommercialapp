@@ -1,16 +1,47 @@
-angular.module('nnitcommercialapp.controllers',[])
+angular.module('nnitcommercialapp.controllers',['nnitcommercialapp.services'
+    ])
 
-.controller('HomeCtrl', function($scope, $ionicModal){
-	$ionicModal.fromTemplateUrl('templates/signup.html', {
+.controller('HomeCtrl', function($scope, $ionicModal, authService){
+  $scope.openSignupModal = function(){
+    $ionicModal.fromTemplateUrl('templates/signup.html', {
+      scope: $scope,
+      animation: 'slide-in-up',
+      focusFirstInput: true
+    }).then(function(modal){
+      $scope.signupModal = modal;
+
+      if($scope.signinModal){
+        $scope.signinModal.hide();
+      }
+
+      $scope.closeSignupModal = function(){
+        $scope.signupModal.hide();
+      };
+
+      $scope.signupModal.show();
+    });
+  };
+	$ionicModal.fromTemplateUrl('templates/signin.html', {
 		scope: $scope,
-		animation: 'slide-in-up'
+		animation: 'slide-in-up',
+    focusFirstInput: true
 	}).then(function(modal){
-		$scope.modal = modal;
-		modal.show();
-	});
-	$scope.closeModal = function(){
-		$scope.modal.hide();
-	};
+		$scope.signinModal = modal;
+    $scope.signin = function(user){
+      if(user){
+        alert(user.mobile);
+      }
+      $scope.signinModal.hide();
+    };
+    $scope.closeSigninModal = function(){
+      $scope.signinModal.hide();
+    };
+	}).then(function(){
+    var auth = authService;
+    if(auth.code != 0){
+      $scope.signinModal.show();
+    }
+  });
 })
 
 .controller('PersonalCtrl', function($scope, $ionicModal){

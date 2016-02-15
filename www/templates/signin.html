@@ -1,7 +1,7 @@
 <ion-modal-view>
   <ion-header-bar class="bar-positive fix-buttons">
-    <a class="button" ng-click="closeSignupModal()">&lt;&nbsp;先随便看看</a>
-    <h1 class="title">会员注册</h1>
+    <a class="button" ng-click="closeSigninModal()">&lt;&nbsp;先随便看看</a>
+    <h1 class="title">会员登录</h1>
   </ion-header-bar>
   <ion-content>
     <form ng-submit="signin(user)">
@@ -11,8 +11,9 @@
         </label>
       </div>
       <div class="padding">
-        <button type="submit" class="button button-block button-positive">注册</button>
+        <button type="submit" class="button button-block button-positive">登录</button>
       </div>
     </form>
+    <button class="button button-block" ng-click="openSignupModal()">没有账号？注册一个呗</a>
   </ion-content>
 </ion-modal-view>
