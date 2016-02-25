@@ -1,6 +1,6 @@
-angular.module('nnitcommercialapp.controllers',['nnitcommercialapp.services', 'nnitcommercialapp.components.authentication'])
+angular.module('nnitcommercialapp.controllers',['nnitcommercialapp.services'])
 
-.controller('HomeCtrl', function($scope, $ionicModal, authService/*, authComponent*/){
+.controller('HomeCtrl', function($scope, $ionicModal, authService){
   $scope.openSignupModal = function(){
     $ionicModal.fromTemplateUrl('templates/signup.html', {
       scope: $scope,
@@ -36,8 +36,8 @@ angular.module('nnitcommercialapp.controllers',['nnitcommercialapp.services', 'n
       $scope.signinModal.hide();
     };
 	}).then(function(){
-    var auth = authService;
-    if(auth.code != 0){
+    var token = authService.getUserToken();
+    if(token.code != 0){
       $scope.signinModal.show();
     }
   });
