@@ -1,4 +1,10 @@
 {
-  "name": "nnitcommercialapp",
-  "app_id": ""
+  "name": "demo",
+  "app_id": "",
+	"proxies": [
+		{
+			"path": "/api",
+			"proxyUrl": "http://localhost:8888"
+		}
+	]
 }

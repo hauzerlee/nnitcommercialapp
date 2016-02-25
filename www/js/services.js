@@ -1,9 +1,13 @@
-angular.module('nnitcommercialapp.services', ['ngResource'])
+angular.module('nnitcommercialapp.services', [])
 
-.factory('authService', function($resource){
+.constant('API_ROOT', {
+  //url: 'localhost:8888'
+  url: 'http://localhost:8100/api'
+})
+.factory('authService', function($http, API_ROOT){
+  var authKey = 'userToken';
 	return {
 		getUserToken: function(){
-			var authKey = 'userToken';
 			if(!window.localStorage.getItem(authKey)) {
 				return {
 					code: 401,
@@ -20,9 +24,34 @@ angular.module('nnitcommercialapp.services', ['ngResource'])
 				};
 			} 
 		},
-		signin: function(mobile){
+    saveUserToken: function(sessionId, memberId){
+      window.localStorage[authKey] = sessionId;
+    },
+		signin: function(user){
+      var signin_data = "mobile=" + user.mobile;
+      var promise = $http.post(API_ROOT + '/signin', signin_data, {
+        headers: {
+        }
+      }).then(function(response){
+        return response;
+      }, function(error){
+        return error;
+      });
+      return promise;
 		},
-		signup: function(mobile){
+		signup: function(user){
+      var password = "123456";
+      var signup_data = "&password=" + password + "&cell_phone_num=" + user.mobile;
+      var promise = $http.post(API_ROOT.url + '/shoppingmall/members/enrol', signup_data, {
+        headers: {
+          'Content-Type' : 'application/x-www-form-urlencoded'
+        }
+      }).then(function(response){
+        return response;
+      }, function(error){
+        return error;
+      });
+      return promise;
 		}
 	};
 });
