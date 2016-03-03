@@ -2,34 +2,34 @@ angular.module('nnitcommercialapp.controllers',['nnitcommercialapp.services'])
 
 .controller('HomeCtrl', function($scope, $ionicModal, authService, $ionicPopup){
   $scope.openSignupModal = function(){
-    $ionicModal.fromTemplateUrl('templates/signup.html', {
+    $ionicModal.fromTemplateUrl('templates/enrol.html', {
       scope: $scope,
       animation: 'slide-in-up',
       focusFirstInput: true
     }).then(function(modal){
-      $scope.signupModal = modal;
+      $scope.enrolModal = modal;
 
-      if($scope.signinModal){
-        $scope.signinModal.hide();
+      if($scope.loginModal){
+        $scope.loginModal.hide();
       }
 
       $scope.closeSignupModal = function(){
-        $scope.signupModal.hide();
+        $scope.enrolModal.hide();
       };
 
-      $scope.signup = function(user){
+      $scope.enrol = function(user){
         if(user){
-          authService.signup(user).then(function(result){
+          authService.enrol(user).then(function(result){
             if(result && result.hasOwnProperty('status') && result['status'] == 200){
               if(result.hasOwnProperty('data') && result['data']['status'] == true){
                 var sessionId = result['data']['sessionId'];
                 var memberId = result['data']['memberId'];
                 $ionicPopup.alert({
                   title : 'sessionId : ' + sessionId,
-                  template : '登录成功！用户Id为' + memberId
+                  template : '注册并登录成功！用户Id为' + memberId
                 });
                 authService.saveUserToken(sessionId, memberId);
-                $scope.signupModal.hide();
+                $scope.enrolModal.hide();
               } else {
                 $ionicPopup.alert({
                   title: '出错啦', 
@@ -41,18 +41,18 @@ angular.module('nnitcommercialapp.controllers',['nnitcommercialapp.services'])
         }
       };
 
-      $scope.signupModal.show();
+      $scope.enrolModal.show();
     });
   };
-	$ionicModal.fromTemplateUrl('templates/signin.html', {
+	$ionicModal.fromTemplateUrl('templates/login.html', {
 		scope: $scope,
 		animation: 'slide-in-up',
     focusFirstInput: true
 	}).then(function(modal){
-		$scope.signinModal = modal;
-    $scope.signin = function(user){
+		$scope.loginModal = modal;
+    $scope.login = function(user){
       if(user){
-        authService.signin(user).then(function(result){
+        authService.login(user).then(function(result){
           if(result && result.hasOwnProperty('status')){
             if(result['status'] == 200 && result['data']['status'] == true){
               var sessionId = result['data']['sessionId'];
@@ -63,7 +63,7 @@ angular.module('nnitcommercialapp.controllers',['nnitcommercialapp.services'])
                 template : '登录成功！用户Id为' + memeberId
               });
             }
-            $scope.signinModal.hide();
+            $scope.loginModal.hide();
           } else {
             $ionicPopup.alert({
               title : '出错啦', 
@@ -74,12 +74,12 @@ angular.module('nnitcommercialapp.controllers',['nnitcommercialapp.services'])
       }
     };
     $scope.closeSigninModal = function(){
-      $scope.signinModal.hide();
+      $scope.loginModal.hide();
     };
 	}).then(function(){
     var token = authService.getUserToken();
     if(token.code != 0){
-      $scope.signinModal.show();
+      $scope.loginModal.show();
     }
   });
 })

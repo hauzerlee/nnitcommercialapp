@@ -27,10 +27,12 @@ angular.module('nnitcommercialapp.services', [])
     saveUserToken: function(sessionId, memberId){
       window.localStorage[authKey] = sessionId;
     },
-		signin: function(user){
-      var signin_data = "mobile=" + user.mobile;
-      var promise = $http.post(API_ROOT + '/signin', signin_data, {
+		login: function(user){
+			var password = "123456";
+      var login_data = "&password=" + password + "&cell_phone_num=" + user.mobile;
+      var promise = $http.post(API_ROOT + '/shoppingmall/members/login', login_data, {
         headers: {
+					'Content-Type' : 'application/x-www-form-urlencoded',
         }
       }).then(function(response){
         return response;
@@ -39,10 +41,10 @@ angular.module('nnitcommercialapp.services', [])
       });
       return promise;
 		},
-		signup: function(user){
+		enrol: function(user){
       var password = "123456";
-      var signup_data = "&password=" + password + "&cell_phone_num=" + user.mobile;
-      var promise = $http.post(API_ROOT.url + '/shoppingmall/members/enrol', signup_data, {
+      var enrol_data = "&password=" + password + "&cell_phone_num=" + user.mobile;
+      var promise = $http.post(API_ROOT.url + '/shoppingmall/members/enrol', enrol_data, {
         headers: {
           'Content-Type' : 'application/x-www-form-urlencoded'
         }
