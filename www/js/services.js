@@ -30,7 +30,7 @@ angular.module('nnitcommercialapp.services', [])
 		login: function(user){
 			var password = "123456";
       var login_data = "&password=" + password + "&cell_phone_num=" + user.mobile;
-      var promise = $http.post(API_ROOT + '/shoppingmall/members/login', login_data, {
+      var promise = $http.post(API_ROOT.url + '/shoppingmall/members/login', login_data, {
         headers: {
 					'Content-Type' : 'application/x-www-form-urlencoded',
         }
