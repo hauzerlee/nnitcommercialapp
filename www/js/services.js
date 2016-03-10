@@ -6,7 +6,11 @@ angular.module('nnitcommercialapp.services', [])
 })
 .factory('authService', function($http, API_ROOT){
   var authKey = 'userToken';
+	var idKey = 'memberId';
 	return {
+		isLogon: function(){
+			return window.localStorage.getItem(authKey);
+		},
 		getUserToken: function(){
 			if(!window.localStorage.getItem(authKey)) {
 				return {
@@ -18,7 +22,8 @@ angular.module('nnitcommercialapp.services', [])
 				return {
 					code: 0,
 					data: {
-						token: window.localStorage.getItem(authKey)
+						token: window.localStorage.getItem(authKey),
+						id: window.localStorage.getItem(idKey)
 					},
 					message: 'user is already signed in'
 				};
@@ -26,6 +31,7 @@ angular.module('nnitcommercialapp.services', [])
 		},
     saveUserToken: function(sessionId, memberId){
       window.localStorage[authKey] = sessionId;
+			window.localStorage[idKey] = memberId;
     },
 		login: function(user){
 			var password = "123456";
@@ -33,6 +39,7 @@ angular.module('nnitcommercialapp.services', [])
       var promise = $http.post(API_ROOT.url + '/shoppingmall/members/login', login_data, {
         headers: {
 					'Content-Type' : 'application/x-www-form-urlencoded',
+          'Authorization' : ''
         }
       }).then(function(response){
         return response;
@@ -53,6 +60,46 @@ angular.module('nnitcommercialapp.services', [])
       }, function(error){
         return error;
       });
+      return promise;
+		}
+	};
+})
+.factory('personalService', function($http, API_ROOT, authService){
+	var noOne = {
+		'id':'000000',
+		'cell_phone': '',
+		'nick_name': '未登录',
+		'password': '',
+		'session_id': '',
+		'lastest_login': '',
+		'fetch_back_pwd': '',
+		'account_number': '',
+		'grade': 0,
+		'status': '未登录',
+		'is_online': false,
+		'gender': '',
+		'pic': 'onOne.png',
+		'email_addr': 'no.one@nnit.com'
+	};
+	return {
+    getNoOne: function(){
+      return noOne;
+    },
+		getPersonal: function(){
+			var tokenObj = authService.getUserToken();
+      var promise;
+			if(tokenObj && tokenObj['data']){
+				promise = $http.get(API_ROOT.url + '/shoppingmall/members/' + tokenObj['data']['id'], {
+					headers: {
+						'Content-Type' : 'application/x-www-form-urlencoded',
+						'Authorization' : tokenObj['data']['token']
+					}
+				}).then(function(response){
+          return response;
+				}, function(error){
+          return error;
+				});
+			}
       return promise;
 		}
 	};

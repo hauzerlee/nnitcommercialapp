@@ -94,7 +94,12 @@ angular.module('nnitcommercialapp.controllers',['nnitcommercialapp.services'])
   });
 })
 
-.controller('PersonalCtrl', function($scope, $ionicModal){
+.controller('PersonalCtrl', function($scope, $ionicModal, personalService){
+  personalService.getPersonal().then(function(response){
+    $scope.p = response['data'];
+  }, function(error){
+    $scope.p = personalService.getNoOne();
+  });
 })
 
 .controller('AboutCtrl', function($scope){})
