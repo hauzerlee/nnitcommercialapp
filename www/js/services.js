@@ -39,6 +39,7 @@ angular.module('nnitcommercialapp.services', [])
       var promise = $http.post(API_ROOT.url + '/shoppingmall/members/login', login_data, {
         headers: {
 					'Content-Type' : 'application/x-www-form-urlencoded',
+          'Authorization' : ''
         }
       }).then(function(response){
         return response;
@@ -81,20 +82,25 @@ angular.module('nnitcommercialapp.services', [])
 		'email_addr': 'no.one@nnit.com'
 	};
 	return {
+    getNoOne: function(){
+      return noOne;
+    },
 		getPersonal: function(){
 			var tokenObj = authService.getUserToken();
+      var promise;
 			if(tokenObj && tokenObj['data']){
-				$http.get(API_ROOT.url + '/shoppingmall/members/' + tokenObj['data']['id'], {
+				promise = $http.get(API_ROOT.url + '/shoppingmall/members/' + tokenObj['data']['id'], {
 					headers: {
 						'Content-Type' : 'application/x-www-form-urlencoded',
 						'Authorization' : tokenObj['data']['token']
 					}
 				}).then(function(response){
+          return response;
 				}, function(error){
+          return error;
 				});
-			} else {
-				return noOne;
 			}
+      return promise;
 		}
 	};
 });
