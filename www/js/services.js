@@ -154,7 +154,21 @@ angular.module('nnitcommercialapp.services', [])
                     return groupons;
                 },
                 getMemberDiscounts: function() {
-                    
+                    var tokenObj = authService.getUserToken();
+                    var discounts;
+                    if (tokenObj && tokenObj['data']) {
+                        discounts = $http.get(API_ROOT.url + '/shoppingmall/discounts/members/' + tokenObj['data']['id'], {
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded',
+                                'Authorization': tokenObj['data']['token']
+                            }
+                        }).then(function (response) {
+                            return response;
+                        }, function(error) {
+                           return error; 
+                        });
+                    }
+                    return discounts;
                 }
             };
         })
