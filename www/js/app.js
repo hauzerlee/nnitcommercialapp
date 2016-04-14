@@ -52,12 +52,12 @@ angular.module('nnitcommercialapp', ['ionic', 'nnitcommercialapp.controllers'])
 		}
 	})
 
-	.state('tab.about', {
-		url: '/about',
+	.state('tab.service', {
+		url: '/service',
 		views: {
-			'tab-about': {
-				templateUrl: 'templates/tab-about.html',
-				controller: 'AboutCtrl'
+			'tab-service': {
+				templateUrl: 'templates/tab-service.html',
+				controller: 'ServiceCtrl'
 			}
 		}
 	});

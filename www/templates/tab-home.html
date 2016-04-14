@@ -1,5 +1,26 @@
-<ion-view view-title="商城首页">
-	<ion-content class="padding">
-		商城首页，尚无内容
-	</ion-content>
+<ion-view view-title="商城首页" ng-app="nnitcommercialapp" >
+    <ion-content class="padding" scroll="true" has-bouncing="true" ng-controller="HomeCtrl">
+
+        <!-- Unnamed (HTML Button) -->
+        <div id="u5" class="ax_html_button">
+            <input id="u5_input" type="submit" value="搜索"/>
+        </div>
+        <!-- Unnamed (Shape) -->
+        <div id="u12" class="ax_paragraph">
+            <img id="u12_img" class="img " src="../img/transparent.gif"/>
+            <!-- Unnamed () -->
+            <div id="u13" class="text">
+                <p><span>消息简述, 一小段文字. </span><span>消息简述, 一小段文字.</span><span>&nbsp;</span><span>消息简述, 一小段文字.</span><span>&nbsp;</span><span>消息简述, 一小段文字.</span><span>..</span></p>
+            </div>
+        </div>
+        <div>
+            <ion-list ng-controller="HomeCtrl">
+                <ion-item ng-repeat="shop in shops">
+                    <img id="shop_pic" class="img" src="../img/ionic.png"/>
+                    <div>{{shop.shop_name}}</div>
+                    <div>{{shop.introduction}}</div>
+                </ion-item>
+            </ion-list>
+        </div>
+    </ion-content>
 </ion-view>

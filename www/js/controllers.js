@@ -1,6 +1,6 @@
 angular.module('nnitcommercialapp.controllers', ['nnitcommercialapp.services'])
 
-        .controller('HomeCtrl', function ($scope, $ionicModal, authService, $ionicPopup) {
+        .controller('HomeCtrl', function ($scope, $ionicModal, authService, shopService, $ionicPopup) {
             $scope.openEnrolModal = function () {
                 $ionicModal.fromTemplateUrl('templates/enrol.html', {
                     scope: $scope,
@@ -29,6 +29,8 @@ angular.module('nnitcommercialapp.controllers', ['nnitcommercialapp.services'])
                                             template: '注册并登录成功！用户Id为' + memberId
                                         });
                                         authService.saveUserToken(sessionId, memberId);
+                                        //to show the home page:
+                                        $scope.shops = shopService.getHotShops();
                                         $scope.enrolModal.hide();
                                     } else {
                                         $ionicPopup.alert({
@@ -67,6 +69,8 @@ angular.module('nnitcommercialapp.controllers', ['nnitcommercialapp.services'])
                                         title: 'sessionId : ' + sessionId,
                                         template: '登录成功！用户Id为' + memberId
                                     });
+                                    //to show the home page:
+                                    $scope.shops = shopService.getHotShops();
                                     $scope.loginModal.hide();
                                 } else {
                                     $ionicPopup.alert({
@@ -80,18 +84,31 @@ angular.module('nnitcommercialapp.controllers', ['nnitcommercialapp.services'])
                                     template: '好像网络出错啦，再试一次或者先随便看看吧'
                                 });
                             }
+                        }).then(function(){ //When user login, display the hot shops list
+                            $scope.hotShops = function () {
+                                var hotShops = shopService.getHotShops();
+                                hotShops.query(function() {
+                                    for (var shop in hotShops) {
+                                        alert(shop);
+                                    }
+                                });
+                            };
                         });
                     }
                 };
                 $scope.closeLoginModal = function () {
                     $scope.loginModal.hide();
                 };
+
             }).then(function () {
                 var token = authService.getUserToken();
                 if (token.code != 0) {
                     $scope.loginModal.show();
                 }
+                ;
             });
+            
+            $scope.shops = shopService.getHotShops();
         })
 
         .controller('PersonalCtrl', function ($scope, $ionicModal, personalService) {
@@ -100,6 +117,12 @@ angular.module('nnitcommercialapp.controllers', ['nnitcommercialapp.services'])
             }, function (error) {
                 $scope.p = personalService.getNoOne();
             });
+
+            personalService.getIntegral().then(function (response) {
+                $scope.p = response['data'];
+            }, function (error) {
+                $scope.p = 0;
+            });
         })
 
-        .controller('AboutCtrl', function ($scope) {})
+        .controller('ServiceCtrl', function ($scope) {})
