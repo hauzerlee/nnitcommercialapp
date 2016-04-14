@@ -1,7 +1,7 @@
-angular.module('nnitcommercialapp.services', [])
+angular.module('nnitcommercialapp.services', ['ngResource'])
 
         .constant('API_ROOT', {
-            //url: 'localhost:8888'
+            //url: 'http://localhost'
             url: 'http://localhost:8100/api'
         })
         .factory('authService', function ($http, API_ROOT) {
@@ -67,8 +67,8 @@ angular.module('nnitcommercialapp.services', [])
         .factory('personalService', function ($http, API_ROOT, authService) {
             var noOne = {
                 'id': '000000',
-                'cell_phone': '',
-                'nick_name': 'Jaly',
+                'cell_phone': '13612077384',
+                'nick_name': '',
                 'password': '',
                 'session_id': '',
                 'lastest_login': '',
@@ -154,20 +154,8 @@ angular.module('nnitcommercialapp.services', [])
                     return groupons;
                 },
                 getMemberDiscounts: function() {
-                    var tokenObj = authService.getUserToken();
                     var discounts;
-                    if (tokenObj && tokenObj['data']) {
-                        discounts = $http.get(API_ROOT.url + '/shoppingmall/discounts/members/' + tokenObj['data']['id'], {
-                            headers: {
-                                'Content-Type': 'application/x-www-form-urlencoded',
-                                'Authorization': tokenObj['data']['token']
-                            }
-                        }).then(function (response) {
-                            return response;
-                        }, function(error) {
-                           return error; 
-                        });
-                    }
+                    discounts = $resource(API_ROOT.url + '/shoppingmall/discounts/members/:memberId', {memberId:'@_memberId'});
                     return discounts;
                 }
             };
@@ -194,4 +182,65 @@ angular.module('nnitcommercialapp.services', [])
                     return discount;
                 }
             };
-        });
+        })
+        .factory('shopService', function($http, $resource, API_ROOT){
+            var shop = {
+                'ID':'00000',
+                'create_time':'2015-02-28 12:34:43',
+                'contact_tel': '1365935690',
+                'floor': '5F',
+                'location': '34号',
+                'introduction': '诞生在上海的一架时尚理念公司',
+                'opening_time': '2014-12-01-01',
+                'contact': '周小福',
+                'shop_name': 'RE调香室',
+                'true_scene': 'http://www.bac.org/true_scene.jpeg',
+                'category': 'BPACvq39KAVsmGzykZHV2U',
+                'member': 'xtqgP6Mrz7gyQNQimtfp7m',
+                'telephone': '87282930',
+                'logo': 'http://www.bac.org/logo.jpeg'
+            };
+            return{
+                getHotShops: function () {
+                    var shops=[];
+                    return hotShops = $resource(API_ROOT.url + '/shoppingmall/shops?offset=1&size=10')
+                       .query(function (data) {
+                        for (var shopIndex in data) {
+                            tempShop = data[shopIndex];
+                            var shop = {
+                                'ID': tempShop['ID'],
+                                'create_time': tempShop['create_time'],
+                                'contact_tel': tempShop['contact_tel'],
+                                'floor': tempShop['floor'],
+                                'location': tempShop['location'],
+                                'introduction': tempShop['introduction'],
+                                'opening_time': tempShop['opening_time'],
+                                'contact': tempShop['contact'],
+                                'shop_name': tempShop['shop_name'],
+                                'true_scene': tempShop['true_scene'],
+                                'category': tempShop['category'],
+                                'member': tempShop['member'],
+                                'telephone': tempShop['telephone'],
+                                'logo': tempShop['logo']
+                            };
+                            shops.push(shop);
+                        }
+                    });
+                    return shops;
+                }
+            };
+        })
+        .factory('categoryService',function($http, $resource, API_ROOT){
+            var category = {
+                
+            };
+            return {
+                getCategories: function() {
+                    var categories = $resource(API_ROOT.url + '/shoppingmall/categories')
+                            .query();
+                        ;
+                    return categories;
+               }
+            };
+        })
+        ;
