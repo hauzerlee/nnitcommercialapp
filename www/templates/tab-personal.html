@@ -1,5 +1,5 @@
 <ion-view view-title="Personal" ng-app="nnitcommercialapp">
-	<ion-content class="padding">
+	<ion-content class="padding" ng-controller="PersonalCtrl">
 		<div class="list card">
 			<div class="item item-avatar">
 				<img src="{{p.pic}}" alt="">
@@ -16,6 +16,10 @@
 			<div class="item item-icon-left">
 				<i class="icon ion-ios-email"></i>邮件地址
 				<h2>{{p.email_addr}}</h2>
+			</div>
+			<div class="item item-icon-lef">
+				<i class="icon ion-bag"></i>当前积分
+				<span class="badge">{{integral}}</span>
 			</div>
 			<div class="item">
 				<button class="button button-block button-positive" ng-click="logout()">
