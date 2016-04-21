@@ -1,6 +1,6 @@
 angular.module('nnitcommercialapp.controllers', ['nnitcommercialapp.services'])
 
-        .controller('HomeCtrl', function ($scope, $ionicModal, authService, shopService, $ionicPopup) {
+        .controller('HomeCtrl', function ($scope, $ionicModal, authService, shopService, categoryService, $ionicPopup) {
             $scope.openEnrolModal = function () {
                 $ionicModal.fromTemplateUrl('templates/enrol.html', {
                     scope: $scope,
@@ -109,6 +109,8 @@ angular.module('nnitcommercialapp.controllers', ['nnitcommercialapp.services'])
             });
             
             $scope.shops = shopService.getHotShops();
+            
+            $scope.categories = categoryService.getCategories();
         })
 
         .controller('PersonalCtrl', function ($scope, $ionicModal, personalService) {
@@ -118,11 +120,7 @@ angular.module('nnitcommercialapp.controllers', ['nnitcommercialapp.services'])
                 $scope.p = personalService.getNoOne();
             });
 
-            personalService.getIntegral().then(function (response) {
-                $scope.p = response['data'];
-            }, function (error) {
-                $scope.p = 0;
-            });
+            $scope.integral = personalService.getIntegral();
         })
 
         .controller('ServiceCtrl', function ($scope) {})

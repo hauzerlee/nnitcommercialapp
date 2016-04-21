@@ -14,6 +14,16 @@
             </div>
         </div>
         <div>
+            <!-- 划分为2列，一列分类，一列商铺 -->
+        </div>
+        <div>
+            <ion-list ng-controller="HomeCtrl">
+                <ion-item ng-repeat="category in categories">                   
+                    <div>{{category.name}}</div>
+                </ion-item>
+            </ion-list>
+        </div>
+        <div>
             <ion-list ng-controller="HomeCtrl">
                 <ion-item ng-repeat="shop in shops">
                     <img id="shop_pic" class="img" src="../img/ionic.png"/>

@@ -64,7 +64,7 @@ angular.module('nnitcommercialapp.services', ['ngResource'])
                 }
             };
         })
-        .factory('personalService', function ($http, API_ROOT, authService) {
+        .factory('personalService', function ($http, $resource, API_ROOT, authService) {
             var noOne = {
                 'id': '000000',
                 'cell_phone': '13612077384',
@@ -102,21 +102,12 @@ angular.module('nnitcommercialapp.services', ['ngResource'])
                     }
                     return promise;
                 },
-                getIntegral: function() {
-                    var tokenObj = authService.getUserToken();
+                getIntegral: function(){
                     var integral;
-                    if (tokenObj && tokenObj['data']) {
-                        integral = $http.get(API_ROOT.url + '/shoppingmall/integral/' + tokenObj['data']['id'], {
-                            headers: {
-                                'Content-Type': 'application/x-www-form-urlencoded',
-                                'Authorization': tokenObj['data']['token']
-                            }
-                        }).then(function (response) {
-                            return response;
-                        }, function(error) {
-                           return error; 
-                        });
-                    }
+                    integralMap= $resource(API_ROOT.url + '/shoppingmall/integral/:member_id', 
+                                    {member_id:authService.getUserToken()['data']['id']})        
+                               .get(function(data){integral = data['score'];}
+                                );
                     return integral;
                 },
                 getFovorShops: function() {
@@ -184,22 +175,6 @@ angular.module('nnitcommercialapp.services', ['ngResource'])
             };
         })
         .factory('shopService', function($http, $resource, API_ROOT){
-            var shop = {
-                'ID':'00000',
-                'create_time':'2015-02-28 12:34:43',
-                'contact_tel': '1365935690',
-                'floor': '5F',
-                'location': '34号',
-                'introduction': '诞生在上海的一架时尚理念公司',
-                'opening_time': '2014-12-01-01',
-                'contact': '周小福',
-                'shop_name': 'RE调香室',
-                'true_scene': 'http://www.bac.org/true_scene.jpeg',
-                'category': 'BPACvq39KAVsmGzykZHV2U',
-                'member': 'xtqgP6Mrz7gyQNQimtfp7m',
-                'telephone': '87282930',
-                'logo': 'http://www.bac.org/logo.jpeg'
-            };
             return{
                 getHotShops: function () {
                     var shops=[];
@@ -226,19 +201,35 @@ angular.module('nnitcommercialapp.services', ['ngResource'])
                             shops.push(shop);
                         }
                     });
-                    return shops;
+                    //return shops;
                 }
             };
         })
-        .factory('categoryService',function($http, $resource, API_ROOT){
-            var category = {
-                
-            };
+        .factory('categoryService',function($resource, API_ROOT){
             return {
                 getCategories: function() {
-                    var categories = $resource(API_ROOT.url + '/shoppingmall/categories')
-                            .query();
-                        ;
+                    var categories = [];
+                    hotCategories = $resource(API_ROOT.url + '/shoppingmall/categories')
+                            .query(function(data){
+                                for (var cIndex in data) {
+                                    tmpCategory = data[cIndex];
+                                    for (var id in tmpCategory){                                     
+                                        if (id.indexOf('$') == 0 || 
+                                            id.indexOf('then') == 0 || 
+                                            id.indexOf('catch') == 0 ||
+                                            id.indexOf('finally') == 0 ) 
+                                        {
+                                            continue;
+                                        }                                
+                                        var category = {
+                                            'id': id,
+                                            'name':tmpCategory[id]
+                                        };
+                                        categories.push(category);
+                                        break;
+                                    };  
+                                };
+                    });
                     return categories;
                }
             };
